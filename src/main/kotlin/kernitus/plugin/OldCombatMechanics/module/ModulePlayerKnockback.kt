@@ -81,7 +81,7 @@ class ModulePlayerKnockback(plugin: OCMMain) : OCMModule(plugin, "old-player-kno
             && event is EntityDamageByEntityEvent
         ) {
             val damager = event.damager
-            if (!isEnabled(damager)) return
+            if (!isEnabled(damager.world)) return
         } else {
             if (!isEnabled(entity)) return
         }

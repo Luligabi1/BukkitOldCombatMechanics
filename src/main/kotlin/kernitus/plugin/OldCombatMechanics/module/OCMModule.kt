@@ -11,7 +11,7 @@ import kernitus.plugin.OldCombatMechanics.utilities.Config.modesets
 import kernitus.plugin.OldCombatMechanics.utilities.Config.moduleEnabled
 import kernitus.plugin.OldCombatMechanics.utilities.Messenger
 import kernitus.plugin.OldCombatMechanics.utilities.Messenger.sendNoPrefix
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage.getPlayerData
+import kernitus.plugin.OldCombatMechanics.utilities.storage.ModesetStorage
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.ConfigurationSection
@@ -50,37 +50,7 @@ abstract class OCMModule protected constructor(protected var plugin: OCMMain, va
      * Whether this module should be enabled for this player given his current modeset
      */
     fun isEnabled(humanEntity: HumanEntity): Boolean {
-        val world = humanEntity.world
-        val modesetName = getPlayerData(humanEntity.uniqueId).getModesetForWorld(world.uid)
-
-        if (modesetName == null) {
-            debug("No modeset found!", humanEntity)
-            debug("No modeset found for " + humanEntity.name)
-            return isEnabled(world)
-        }
-
-        // Check if the modeset contains this module's name
-        val modeset = modesets[modesetName]
-        return modeset != null && modeset.contains(configName)
-    }
-
-    fun isEnabled(entity: Entity): Boolean {
-        if (entity is HumanEntity) return isEnabled(entity)
-        return isEnabled(entity.world)
-    }
-
-    /**
-     * Returns if module should be enabled, giving priority to the attacker, if a human.
-     * If neither entity is a human, checks if module should be enabled in the defender's world.
-     *
-     * @param attacker The entity that is performing the attack
-     * @param defender The entity that is being attacked
-     * @return Whether the module should be enabled for this particular interaction
-     */
-    fun isEnabled(attacker: Entity, defender: Entity): Boolean {
-        if (attacker is HumanEntity) return isEnabled(attacker)
-        if (defender is HumanEntity) return isEnabled(defender)
-        return isEnabled(defender.world)
+        return isEnabled(humanEntity.world)
     }
 
     /**

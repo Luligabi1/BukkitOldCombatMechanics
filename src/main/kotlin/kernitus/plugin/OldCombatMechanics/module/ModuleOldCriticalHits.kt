@@ -24,7 +24,7 @@ class ModuleOldCriticalHits(plugin: OCMMain) : OCMModule(plugin, "old-critical-h
 
     @EventHandler
     fun onOCMDamage(e: OCMEntityDamageByEntityEvent) {
-        if (!isEnabled(e.damager, e.damagee)) return
+        if (!isEnabled(e.damager.world)) return
 
         // In 1.9, a critical hit requires the player not to be sprinting
         if (e.was1_8Crit && (allowSprinting || !e.wasSprinting)) e.criticalMultiplier = multiplier

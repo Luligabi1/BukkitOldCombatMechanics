@@ -46,7 +46,7 @@ class ModuleOldArmourStrength(plugin: OCMMain) : OCMModule(plugin, "old-armour-s
         // If there was an attacker, and he does not have this module enabled, return
         if (e.cause == DamageCause.ENTITY_ATTACK && e is EntityDamageByEntityEvent) {
             val damager = e.damager
-            if (!isEnabled(damager, damagedEntity)) return
+            if (!isEnabled(damager.world)) return
         }
 
         val damageModifiers = DamageModifier.entries

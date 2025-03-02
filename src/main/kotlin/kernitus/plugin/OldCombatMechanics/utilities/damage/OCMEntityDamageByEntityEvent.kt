@@ -172,13 +172,12 @@ class OCMEntityDamageByEntityEvent(
         if (livingDamager is Player && isCriticalHit1_8(livingDamager as HumanEntity)) {
             was1_8Crit = true
             Messenger.debug(livingDamager, "1.8 Critical hit detected")
-            // In 1.9 a crit also requires the player not to be sprinting
-            if (isCriticalHit1_9(livingDamager)) {
+            /*if (isCriticalHit1_9(livingDamager)) {
                 Messenger.debug(livingDamager, "1.9 Critical hit detected")
                 Messenger.debug("1.9 Critical hit detected")
                 criticalMultiplier = 1.5
                 tempDamage /= 1.5
-            }
+            }*/
         }
 
         // Un-scale the damage by the attack strength

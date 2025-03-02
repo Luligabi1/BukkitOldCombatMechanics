@@ -18,7 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 class ModuleProjectileKnockback(plugin: OCMMain) : OCMModule(plugin, "projectile-knockback") {
     @EventHandler(priority = EventPriority.NORMAL)
     fun onEntityHit(e: EntityDamageByEntityEvent) {
-        if (!isEnabled(e.damager, e.entity)) return
+        if (!isEnabled(e.damager.world)) return
 
         when (val type = e.damager.type) {
             EntityType.SNOWBALL, EntityType.EGG, EntityType.ENDER_PEARL -> if (e.damage == 0.0) { // So we don't override enderpearl fall damage

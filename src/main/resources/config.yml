@@ -34,17 +34,6 @@ modesets:
     - "old-critical-hits"
   new: [ ]
 
-worlds:
-  # These are the modesets available in each world.
-  # If player has no modeset when moving worlds they'll be assigned first mode in list,
-  # unless the mode from the world they are coming from is also available in the new world.
-  # Worlds not specified below will have all modesets available.
-  world: [ "old", "new" ]
-  world_nether: [ "old", "new" ]
-  world_the_end: [ "old", "new" ]
-  # old_world: ["old"]
-  # brave_new_world: ["new"]
-
 mode-messages:
   # Messages used when changing player mode
   # To disable any message, leave the corresponding string empty (e.g., mode-status: "").
@@ -197,6 +186,11 @@ disable-sword-sweep:
 
 disable-sword-sweep-particles:
   # This is to disable the sword sweep attack particles
+  # Requires ProtocolLib
+  enabled: false
+
+disable-damage-indicator-particles:
+  # This is to disable the black heart particles
   # Requires ProtocolLib
   enabled: false
 
@@ -524,16 +518,6 @@ disable-attack-sounds:
 # ########################
 
 message-prefix: "&6[OCM]&r"
-
-# This is to toggle the update checker
-update-checker:
-  # Whether to check for updates and notify players with the oldcombatmechanics.notify permission
-  enabled: true
-  # Whether to automatically download an update of the plugin
-  # The update is applied on the next restart/reload of the server
-  # Auto update is disabled if Spigot version is below 1.18.1 and force-below-1-18-1-config-upgrade is false
-  # This is to prevent accidentally resetting the config
-  auto-update: true
 
 # Whether to force config upgrade even in Spigot versions below 1.18.1
 # This is not advised, as all the comments would be removed

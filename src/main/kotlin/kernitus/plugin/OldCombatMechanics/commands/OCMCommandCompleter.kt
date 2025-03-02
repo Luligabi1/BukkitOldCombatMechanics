@@ -35,13 +35,7 @@ class OCMCommandCompleter : TabCompleter {
                 if (sender.hasPermission("oldcombatmechanics.mode.others") ||
                     sender.hasPermission("oldcombatmechanics.mode.own")
                 ) {
-                    val modesets = if (sender is Player) {
-                        // Get the modesets allowed in the world player is in
-                        Config.worlds.getOrDefault(sender.world.uid, Config.modesets.keys)
-                    } else {
-                        Config.modesets.keys
-                    }
-                    return modesets.filter { it.startsWith(args[1], ignoreCase = true) }
+                    return Config.modesets.keys.filter { it.startsWith(args[1], ignoreCase = true) }
                 }
             } else if (sender.hasPermission("oldcombatmechanics.mode.others")) {
                 return Bukkit.getOnlinePlayers()

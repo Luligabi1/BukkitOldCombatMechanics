@@ -6,7 +6,7 @@
 package kernitus.plugin.OldCombatMechanics.module
 
 import kernitus.plugin.OldCombatMechanics.OCMMain
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage.getPlayerData
+import kernitus.plugin.OldCombatMechanics.utilities.storage.ModesetStorage
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
@@ -62,7 +62,7 @@ class ModuleAttackCooldown(plugin: OCMMain) : OCMModule(plugin, "disable-attack-
 
         val baseValue = attribute.baseValue
 
-        val modesetName = getPlayerData(player.uniqueId).getModesetForWorld(player.world.uid)
+        val modesetName = ModesetStorage.getModesetForWorld(player.world.uid)
         debug(
             String.format(
                 "Setting attack speed to %.2f (was: %.2f) for %s in mode %s",
