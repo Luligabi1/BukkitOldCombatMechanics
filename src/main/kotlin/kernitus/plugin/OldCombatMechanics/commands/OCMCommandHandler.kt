@@ -10,7 +10,7 @@ import kernitus.plugin.OldCombatMechanics.OCMMain
 import kernitus.plugin.OldCombatMechanics.module.OCMModule
 import kernitus.plugin.OldCombatMechanics.utilities.Config
 import kernitus.plugin.OldCombatMechanics.utilities.Messenger
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage
+import kernitus.plugin.OldCombatMechanics.utilities.storage.ModesetStorage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -53,8 +53,7 @@ class OCMCommandHandler(private val plugin: OCMMain) : CommandExecutor {
     private fun mode(sender: CommandSender, args: Array<String>) {
         if (args.size < 2) {
             if (sender is Player) {
-                val playerData = PlayerStorage.getPlayerData(sender.uniqueId)
-                var modeName = playerData.getModesetForWorld(sender.world.uid)
+                var modeName = ModesetStorage.getModesetNameForWorld(sender.world.uid)
                 if (modeName.isNullOrEmpty()) modeName = "unknown"
 
                 Messenger.send(
@@ -107,22 +106,8 @@ class OCMCommandHandler(private val plugin: OCMMain) : CommandExecutor {
         }
 
         val worldId = player.world.uid
-        val worldModesets = Config.worlds[worldId]
 
-        // If modesets null it means not configured, so all are allowed
-        if (worldModesets != null && !worldModesets.contains(modesetName)) { // Modeset not allowed in current world
-            Messenger.send(
-                sender,
-                Config.getConfig().getString("mode-messages.invalid-modeset")
-                    ?: "&4ERROR: &rmode-messages.invalid-modeset string missing"
-            )
-            return
-        }
-
-        val playerData = PlayerStorage.getPlayerData(player.uniqueId)
-        playerData.setModesetForWorld(worldId, modesetName)
-        PlayerStorage.setPlayerData(player.uniqueId, playerData)
-        PlayerStorage.scheduleSave()
+        ModesetStorage.setModesetForWorld(worldId, modesetName)
 
         Messenger.send(
             sender,

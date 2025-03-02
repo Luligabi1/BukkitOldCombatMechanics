@@ -50,7 +50,8 @@ class ModuleAttackSounds(plugin: OCMMain) : OCMModule(plugin, "disable-attack-so
 
                 //fix NullpointerException when sending a custom sound 
 
-                val soundName = sound.toString() // Works for both string and namespaced key
+                val soundName = sound.toString().replace(".", "_") // Works for both string and namespaced key
+
 
                 if (blockedSounds.contains(soundName)) {
                     packetEvent.isCancelled = true

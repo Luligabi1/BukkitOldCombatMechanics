@@ -61,7 +61,7 @@ class ModuleShieldDamageReduction(plugin: OCMMain) : OCMModule(plugin, "shield-d
     fun onHit(e: EntityDamageByEntityEvent) {
         val entity = e.entity as? Player ?: return
 
-        if (!isEnabled(e.damager, entity)) return
+        if (!isEnabled(e.damager.world)) return
 
         // Blocking is calculated after base and hard hat, and before armour etc.
         val baseDamage = e.getDamage(DamageModifier.BASE) + e.getDamage(DamageModifier.HARD_HAT)

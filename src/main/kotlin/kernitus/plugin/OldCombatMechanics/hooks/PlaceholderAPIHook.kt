@@ -9,7 +9,7 @@ import kernitus.plugin.OldCombatMechanics.OCMMain
 import kernitus.plugin.OldCombatMechanics.hooks.api.Hook
 import kernitus.plugin.OldCombatMechanics.module.ModuleDisableEnderpearlCooldown
 import kernitus.plugin.OldCombatMechanics.module.ModuleGoldenApple
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage
+import kernitus.plugin.OldCombatMechanics.utilities.storage.ModesetStorage
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.entity.Player
 
@@ -54,8 +54,7 @@ class PlaceholderAPIHook : Hook {
             }
 
             fun getModeset(player: Player): String {
-                val playerData = PlayerStorage.getPlayerData(player.uniqueId)
-                var modeName = playerData.getModesetForWorld(player.world.uid)
+                var modeName = ModesetStorage.getModesetNameForWorld(player.world.uid)
                 if (modeName.isNullOrEmpty()) modeName = "unknown"
                 return modeName
             }

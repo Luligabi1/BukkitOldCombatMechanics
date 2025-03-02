@@ -11,9 +11,8 @@ import kernitus.plugin.OldCombatMechanics.OCMMain
 import kernitus.plugin.OldCombatMechanics.module.OCMModule
 import kernitus.plugin.OldCombatMechanics.utilities.damage.EntityDamageByEntityListener.Companion.INSTANCE
 import kernitus.plugin.OldCombatMechanics.utilities.damage.WeaponDamages
-import org.bukkit.Bukkit
+import kernitus.plugin.OldCombatMechanics.utilities.storage.ModesetStorage
 import org.bukkit.World
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.InputStreamReader
@@ -26,7 +25,6 @@ object Config {
     private lateinit var plugin: OCMMain
     private lateinit var config: FileConfiguration
     val modesets: MutableMap<String, MutableSet<String>> = HashMap()
-    val worlds: MutableMap<UUID, Set<String>> = HashMap()
 
     fun initialise(plugin: OCMMain) {
         Config.plugin = plugin
@@ -72,7 +70,6 @@ object Config {
             (moduleEnabled("old-tool-damage") || moduleEnabled("old-potion-effects") || moduleEnabled("old-critical-hits"))
 
         reloadModesets()
-        reloadWorlds()
 
         // Dynamically registers / unregisters all event listeners for optimal performance
         toggleModules()
@@ -117,61 +114,14 @@ object Config {
         modesets.values.forEach { it.addAll(modulesNotInAnyModeset) }
     }
 
-    private fun reloadWorlds() {
-        worlds.clear()
-
-        val worldsSection = config.getConfigurationSection("worlds")
-            ?: throw IllegalStateException("Worlds section is missing from config.yml!")
-
-        // Iterate over each world
-        for (worldName in worldsSection.getKeys(false)) {
-            val world = Bukkit.getWorld(worldName)
-            if (world == null) {
-                Messenger.warn("Configured world $worldName not found, skipping (might be loaded later?)...")
-                continue
-            }
-            addWorld(world, worldsSection)
-        }
-    }
-
-    fun addWorld(world: World) {
-        val worldsSection = config.getConfigurationSection("worlds")
-            ?: throw IllegalStateException("Worlds section is missing from config.yml!")
-        addWorld(world, worldsSection)
-    }
-
-    fun addWorld(world: World, worldsSection: ConfigurationSection) {
-        // Retrieve the list of modeset names for the current world
-        // Using a linkedhashset to remove duplicates but retain insertion order (important for default modeset)
-        val modesetsSet = LinkedHashSet(worldsSection.getStringList(world.name))
-
-        // Add the current world and its modesets to the map
-        worlds[world.uid] = modesetsSet
-    }
-
-    fun removeWorld(world: World) = worlds.remove(world.uid)
-
     /**
      * Get the default modeset for the given world.
      *
      * @param worldId The UUID for the world to check the allowed modesets for
      * @return The default modeset, if found, else null.
      */
-    fun getDefaultModeset(worldId: UUID): Set<String>? {
-        if (!worlds.containsKey(worldId)) return null
-
-        val set = worlds[worldId]
-        if (set.isNullOrEmpty()) return null
-
-        val iterator = set.iterator()
-        if (iterator.hasNext()) {
-            val modesetName = iterator.next()
-            if (modesets.containsKey(modesetName)) {
-                return modesets[modesetName]
-            }
-        }
-
-        return null
+    fun getModesetFor(worldId: UUID): Set<String>? {
+        return ModesetStorage.getModesetForWorld(worldId)
     }
 
     /**
@@ -193,8 +143,7 @@ object Config {
         if (!section.getBoolean("enabled")) return false
         if (world == null) return true // Only checking if module is globally enabled
 
-
-        val defaultModeset = getDefaultModeset(world.uid) ?: return true
+        val defaultModeset = getModesetFor(world.uid) ?: return true
         // If no default modeset found, the module should be enabled
 
         // Check if module is in default modeset

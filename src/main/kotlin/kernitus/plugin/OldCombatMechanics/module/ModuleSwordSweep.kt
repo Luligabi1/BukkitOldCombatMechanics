@@ -53,7 +53,7 @@ class ModuleSwordSweep(plugin: OCMMain) : OCMModule(plugin, "disable-sword-sweep
     fun onEntityDamaged(e: EntityDamageByEntityEvent) {
         val damager = e.damager as? Player ?: return
 
-        if (!isEnabled(damager, e.entity)) return
+        if (!isEnabled(e.damager.world)) return
 
         if (sweepDamageCause != null) {
             if (e.cause == sweepDamageCause) {

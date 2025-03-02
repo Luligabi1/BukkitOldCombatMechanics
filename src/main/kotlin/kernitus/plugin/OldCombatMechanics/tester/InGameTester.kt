@@ -15,8 +15,6 @@ import kernitus.plugin.OldCombatMechanics.utilities.damage.DamageUtils.isCritica
 import kernitus.plugin.OldCombatMechanics.utilities.damage.DefenceUtils.getDamageAfterArmour1_8
 import kernitus.plugin.OldCombatMechanics.utilities.damage.WeaponDamages.getDamage
 import kernitus.plugin.OldCombatMechanics.utilities.damage.WeaponDamages.materialDamages
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage.getPlayerData
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage.setPlayerData
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location

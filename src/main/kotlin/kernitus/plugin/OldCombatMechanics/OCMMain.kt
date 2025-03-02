@@ -14,14 +14,13 @@ import kernitus.plugin.OldCombatMechanics.commands.OCMCommandHandler
 import kernitus.plugin.OldCombatMechanics.hooks.PlaceholderAPIHook
 import kernitus.plugin.OldCombatMechanics.hooks.api.Hook
 import kernitus.plugin.OldCombatMechanics.module.*
-import kernitus.plugin.OldCombatMechanics.updater.ModuleUpdateChecker
 import kernitus.plugin.OldCombatMechanics.utilities.Config
 import kernitus.plugin.OldCombatMechanics.utilities.Messenger
 import kernitus.plugin.OldCombatMechanics.utilities.damage.AttackCooldownTracker
 import kernitus.plugin.OldCombatMechanics.utilities.damage.EntityDamageByEntityListener
 import kernitus.plugin.OldCombatMechanics.utilities.reflection.Reflector
 import kernitus.plugin.OldCombatMechanics.utilities.storage.ModesetListener
-import kernitus.plugin.OldCombatMechanics.utilities.storage.PlayerStorage
+import me.clip.placeholderapi.updatechecker.UpdateChecker
 import org.bstats.bukkit.Metrics
 import org.bstats.charts.SimpleBarChart
 import org.bstats.charts.SimplePie
@@ -56,9 +55,6 @@ class OCMMain : JavaPlugin() {
 
         // Setting up config.yml
         configHandler.setupConfigIfNotPresent()
-
-        // Initialise persistent player storage
-        PlayerStorage.initialise(this)
 
         // Initialise ModuleLoader utility
         initialise(this)
@@ -137,11 +133,6 @@ class OCMMain : JavaPlugin() {
         val pdfFile = this.description
         logger.info(pdfFile.name + " v" + pdfFile.version + " has been enabled")
 
-        if (Config.moduleEnabled("update-checker")) Bukkit.getScheduler().runTaskLaterAsynchronously(
-            this,
-            Runnable { UpdateChecker(this).performUpdate() }, 20L
-        )
-
         metrics.addCustomChart(
             SimplePie(
                 "auto_update_pie"
@@ -176,16 +167,11 @@ class OCMMain : JavaPlugin() {
             })
         }
 
-        PlayerStorage.instantSave()
-
         // Logging to console the disabling of OCM
         logger.info(pdfFile.name + " v" + pdfFile.version + " has been disabled")
     }
 
     private fun registerModules() {
-        // Update Checker (also a module, so we can use the dynamic registering/unregistering)
-        addModule(ModuleUpdateChecker(this))
-
         // Modeset listener, for when player joins or changes world
         addModule(ModesetListener(this))
 
@@ -239,8 +225,9 @@ class OCMMain : JavaPlugin() {
         if (protocolManager != null) {
             addModule(ModuleAttackSounds(this))
             addModule(ModuleSwordSweepParticles(this))
+            addModule(ModuleDamageIndicatorParticles(this))
         } else {
-            Messenger.warn("No ProtocolLib detected, attack-sounds and sword-sweep-particles modules will be disabled")
+            Messenger.warn("No ProtocolLib detected, attack-sounds, sword-sweep-particles and disable-damage-indicator-particles modules will be disabled")
         }
     }
 

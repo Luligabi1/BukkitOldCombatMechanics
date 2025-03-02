@@ -30,7 +30,7 @@ class ModuleOldToolDamage(plugin: OCMMain) : OCMModule(plugin, "old-tool-damage"
         val damager = event.damager
         if (event.cause == DamageCause.THORNS) return
 
-        if (!isEnabled(damager, event.damagee)) return
+        if (!isEnabled(damager.world)) return
 
         val weapon = event.weapon
         val weaponMaterial = weapon!!.type

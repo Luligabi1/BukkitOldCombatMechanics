@@ -18,7 +18,7 @@ class ModuleOldBurnDelay(plugin: OCMMain) : OCMModule(plugin, "old-burn-delay") 
     fun onFireTick(e: EntityDamageEvent) {
         if (e.cause == DamageCause.FIRE) {
             val entity = e.entity
-            if (!isEnabled(entity)) return
+            if (!isEnabled(entity.world)) return
 
             val fireTicks = module().getInt("fire-ticks")
             entity.fireTicks = fireTicks

@@ -147,7 +147,7 @@ class ModuleOldPotionEffects(plugin: OCMMain) : OCMModule(plugin, "old-potion-ef
     @EventHandler(ignoreCancelled = true)
     fun onDamageByEntity(event: OCMEntityDamageByEntityEvent) {
         val damager = event.damager
-        if (!isEnabled(damager, event.damagee)) return
+        if (!isEnabled(damager.world)) return
 
         if (event.hasWeakness) {
             event.isWeaknessModifierMultiplier = module().getBoolean("weakness.multiplier")
